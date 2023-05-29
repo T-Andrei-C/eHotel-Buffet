@@ -22,22 +22,14 @@ public class GuestServiceImpl implements GuestService {
         String guestName = guestNames[rand.nextInt(guestNames.length)];
         GuestType guestType = GuestType.values()[rand.nextInt(GuestType.values().length)];
         int maxPeriod = seasonEnd.getDayOfMonth() - seasonStart.getDayOfMonth();
-        System.out.println("Max period: " + maxPeriod);
-        if(maxPeriod > 7) {
+
+        if (maxPeriod > 7) {
             maxPeriod = 7;
         }
-        System.out.println("Chosen base max period: " + maxPeriod);
-        int period = rand.nextInt(maxPeriod) +1;
-        System.out.println("Final period: " + period);
-        int firstDay;
-        if(period == maxPeriod){
-            firstDay = seasonStart.getDayOfMonth();
-        }else {
-            firstDay = rand.nextInt(seasonEnd.getDayOfMonth() - seasonStart.getDayOfMonth() - period) + seasonStart.getDayOfMonth();
-        }
-         System.out.println("First day: " + firstDay);
-        int lastDay = firstDay + period ;
-        System.out.println("Last day: " + lastDay);
+
+        int period = rand.nextInt(maxPeriod) + 1;
+        int firstDay = rand.nextInt((seasonStart.getDayOfMonth() - 1), seasonEnd.getDayOfMonth() - period) + 1;
+        int lastDay = firstDay + period;
 
         LocalDate checkIn = LocalDate.of(seasonStart.getYear(), seasonStart.getMonth(), firstDay);
         LocalDate checkOut = LocalDate.of(seasonStart.getYear(), seasonStart.getMonth(), lastDay);
