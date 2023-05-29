@@ -4,30 +4,46 @@ import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.GuestType;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 public class GuestServiceImpl implements GuestService {
-    private final String[] guestNames = {
-            "Tomas Rutherford", "Samuel Hammond", "George Nelson",
-            "Noelle Dobson", "Lily Verne", "Rosa Hunting",
-            "Hugh Boston", "Jack Sparrow", "Will Turner", "Rachel Greene" };
+    private final String[] firstNames = {
+            "Tomas", "Samuel", "George", "Noelle", "Lily",
+            "Rosa", "Hugh", "Jack", "Will", "Rachel", "Nadia",
+            "Chloe"
+    };
+    private final String[] lastNames = {
+            "Rutherford", "Hammond", "Nelson", "Dobson",
+            "Verne", "Hunting", "Boston", "Sparrow", "Turner",
+            "Greene", "Hamilton", "Tucker" };
+
+//    private final String[] guestNames = {
+//
+//    }
 
     @Override
     public Guest generateRandomGuest(LocalDate seasonStart, LocalDate seasonEnd) {
         Random rand = new Random();
-        String guestName = guestNames[rand.nextInt(guestNames.length)];
+        String guestName = firstNames[rand.nextInt(firstNames.length)] + " " + lastNames[rand.nextInt(lastNames.length)];
         GuestType guestType = GuestType.values()[rand.nextInt(GuestType.values().length)];
 
-        int maxPeriod = Math.min(seasonEnd.getDayOfMonth() - seasonStart.getDayOfMonth(), 7);
-        int period = rand.nextInt(maxPeriod) + 1;
-        int firstDay = rand.nextInt((seasonStart.getDayOfMonth() - 1), seasonEnd.getDayOfMonth() - period) + 1;
-        int lastDay = firstDay + period;
+        int seasonLength = (int) ChronoUnit.DAYS.between(seasonStart, seasonEnd);
+        int maxPeriod = Math.min(seasonLength, 7);
+        int actualStay = rand.nextInt(maxPeriod) + 1;
+        int firstDay;
+        if(maxPeriod == actualStay) {
+            firstDay = seasonStart.getDayOfMonth();
+        } else {
+            firstDay = rand.nextInt(seasonLength - actualStay) + 1;
+        }
+        int lastDay = firstDay + actualStay;
 
-        LocalDate checkIn = LocalDate.of(seasonStart.getYear(), seasonStart.getMonth(), firstDay);
-        LocalDate checkOut = LocalDate.of(seasonStart.getYear(), seasonStart.getMonth(), lastDay);
+        LocalDate checkIn = seasonStart.plusDays(firstDay);
+        LocalDate checkOut = seasonStart.plusDays(lastDay);
 
         return new Guest(guestName, guestType, checkIn, checkOut);
     }
