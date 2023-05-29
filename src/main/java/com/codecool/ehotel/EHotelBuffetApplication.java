@@ -1,23 +1,40 @@
 package com.codecool.ehotel;
 
+import com.codecool.ehotel.model.Buffet;
+import com.codecool.ehotel.model.MealType;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.guest.GuestServiceImpl;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.GuestType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EHotelBuffetApplication {
 
     public static void main(String[] args) {
 
         GuestService guestService = new GuestServiceImpl();
-        System.out.println(guestService.generateRandomGuest(
-                        LocalDate.of(2022, Month.JUNE, 1),
-                        LocalDate.of(2022, Month.JUNE, 24)));
+//        System.out.println(guestService.generateRandomGuest(
+//                        LocalDate.of(2022, Month.JUNE, 1),
+//                        LocalDate.of(2022, Month.JUNE, 24)));
+
+        final int hotelGuestsNr = 12;
+        LocalDate startDate = LocalDate.now();
+        System.out.println(startDate);
+        LocalDate endDate = startDate.plusDays(3);
+        System.out.println(endDate);
+        List<Guest> guests2 = new ArrayList<>();
+        for(int i = 0; i < hotelGuestsNr; i++) {
+            guests2.add(guestService.generateRandomGuest(startDate, endDate));
+        }
+
+        System.out.println(guests2);
 
         // Initialize services
 
@@ -63,11 +80,12 @@ public class EHotelBuffetApplication {
                         LocalDate.of(2022, Month.JUNE, 28))
         );
 
-        System.out.println(guestService.getGuestsForDay(guests,LocalDate.of(2022, Month.JUNE, 6)));
+//        System.out.println(guestService.getGuestsForDay(guests,LocalDate.of(2022, Month.JUNE, 6)));
 
 
         // Run breakfast buffet
 
-
+//        Map<MealType, List<LocalDateTime>> actualPortions = new HashMap<>();
+//        Buffet myBuffet = new Buffet(actualPortions);
     }
 }
