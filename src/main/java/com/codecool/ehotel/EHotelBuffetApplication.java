@@ -13,7 +13,7 @@ public class EHotelBuffetApplication {
         GuestService guestService = new GuestServiceImpl();
         System.out.println(guestService.generateRandomGuest(
                         LocalDate.of(2022, Month.JUNE, 1),
-                        LocalDate.of(2022, Month.JUNE, 4)));
+                        LocalDate.of(2022, Month.JUNE, 24)));
 
         // Initialize services
 
