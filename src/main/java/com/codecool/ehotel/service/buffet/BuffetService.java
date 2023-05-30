@@ -10,6 +10,6 @@ import java.util.List;
 public interface BuffetService {
     LocalDate date();
     public Boolean consumeFreshest();
-    public List<MealType> refill(Buffet buffet, List<MealType> mealNumber);
+    public void refill(Buffet buffet, MealType meal, int amount);
     public int collectWaste();
 }
