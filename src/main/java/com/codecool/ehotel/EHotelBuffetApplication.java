@@ -1,13 +1,10 @@
 package com.codecool.ehotel;
 
-import com.codecool.ehotel.model.Buffet;
-import com.codecool.ehotel.model.MealType;
+import com.codecool.ehotel.model.*;
 import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.guest.GuestServiceImpl;
-import com.codecool.ehotel.model.Guest;
-import com.codecool.ehotel.model.GuestType;
 import com.google.common.collect.Lists;
 
 import java.time.LocalDate;
@@ -16,7 +13,7 @@ import java.time.Month;
 import java.util.*;
 
 public class EHotelBuffetApplication {
-       public static void main(String[] args) {
+    public static void main(String[] args) {
 
         // Initialize services
 
@@ -26,6 +23,7 @@ public class EHotelBuffetApplication {
         List<Guest> happyGuests = new ArrayList<>();
         List<Guest> unhappyGuests = new ArrayList<>();
         List<MealType> thrownMeals = new ArrayList<>();
+        int totalWasteCost = 0;
 
         // Generate guests for the season
 
@@ -34,15 +32,15 @@ public class EHotelBuffetApplication {
         LocalDate endDate = LocalDate.of(2022, Month.AUGUST, 25);
 
         List<Guest> guests = new ArrayList<>();
-        for(int i = 0; i < hotelGuestsNr; i++) {
+        for (int i = 0; i < hotelGuestsNr; i++) {
             guests.add(guestService.generateRandomGuest(startDate, endDate));
         }
 
-        Map<MealType , List<LocalDateTime>> portions = new HashMap<>();
-        for(int i=0; i<MealType.values().length; i++){
+        Map<MealType, List<LocalDateTime>> portions = new HashMap<>();
+        for (int i = 0; i < MealType.values().length; i++) {
             List<LocalDateTime> times = new ArrayList<>();
-            for(int j=0 ; j<2; j++){
-                times.add(LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0));
+            for (int j = 0; j < 2; j++) {
+                times.add(LocalDateTime.of(2022, Month.AUGUST, 8, 6, 0, 0));
             }
             portions.put(MealType.values()[i], times);
         }
@@ -53,23 +51,48 @@ public class EHotelBuffetApplication {
         int cycle = 8;
         Set<Guest> guestsForTheDay = guestService.getGuestsForDay(guests, LocalDate.of(2022, Month.AUGUST, 8));
 
-        Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay,cycle);
+        Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay, cycle);
 
         System.out.println("Number of guests today: " + guestsForTheDay.size());
 
-        LocalDateTime currentTime = LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0);
+        LocalDateTime currentTime = LocalDateTime.of(2022, Month.AUGUST, 8, 6, 0, 0);
 
-        for(int i = 0 ; i<cycle ; i++) {
-            for (Guest guest : guestsPerCycle.get(i)){
-                buffetService.consumeFreshest(buffet, guest, currentTime);
+        for (int i = 0; i < cycle; i++) {
+            for (Guest guest : guestsPerCycle.get(i)) {
+                boolean isHappy = buffetService.consumeFreshest(buffet, guest, currentTime);
+                if (isHappy) {
+                    happyGuests.add(guest);
+                } else {
+                    unhappyGuests.add(guest);
+                }
             }
-            System.out.println("After cycle " + i + " : " + buffet);
-            for(int j=0 ; j<MealType.values().length; j++){
-                buffetService.refill(buffet,MealType.values()[j],2,currentTime);
+            System.out.println("After cycle " + (i + 1) + " : " + buffet);
+            for (int j = 0; j < MealType.values().length; j++) {
+                if (i < 7) {
+                    buffetService.refill(buffet, MealType.values()[j], 2, currentTime);
+                    totalWasteCost += buffetService.collectWaste(buffet.portions().get(MealType.values()[j]), currentTime, MealType.values()[j]);
+                } else {
+                    for (int k = 0; k < buffet.portions().get(MealType.values()[j]).size(); k++) {
+                        if (MealType.values()[j].getDurability() == MealDurability.SHORT || MealType.values()[j].getDurability() == MealDurability.MEDIUM) {
+                            buffet.portions().get(MealType.values()[j]).clear();
+                            totalWasteCost += MealType.values()[j].getCost();
+                        }
+                    }
+                }
             }
-            System.out.println("After refill " + i + " : " + buffet);
+            if (i < 7){
+                System.out.println("After refill " + (i + 1) + " : " + buffet);
+            } else {
+                System.out.println("Remaining meals: " + buffet);
+            }
+
             currentTime = currentTime.plusMinutes(30);
+
         }
+
+        System.out.println("Number of happy guests: " + happyGuests.size());
+        System.out.println("Number of unhappy guests: " + unhappyGuests.size());
+        System.out.println("Total money loss today :( " + totalWasteCost);
 
         // Run breakfast buffet
 
@@ -102,7 +125,4 @@ public class EHotelBuffetApplication {
 
         return cycles;
     }
-
-
-
 }
