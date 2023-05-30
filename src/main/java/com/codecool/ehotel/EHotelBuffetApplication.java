@@ -16,8 +16,7 @@ import java.time.Month;
 import java.util.*;
 
 public class EHotelBuffetApplication {
-
-    public static void main(String[] args) {
+       public static void main(String[] args) {
 
         // Initialize services
 
@@ -27,7 +26,6 @@ public class EHotelBuffetApplication {
         List<Guest> happyGuests = new ArrayList<>();
         List<Guest> unhappyGuests = new ArrayList<>();
         List<MealType> thrownMeals = new ArrayList<>();
-        Set<Guest> guestsForTheDay = new HashSet<>();
 
         // Generate guests for the season
 
@@ -39,9 +37,6 @@ public class EHotelBuffetApplication {
         for(int i = 0; i < hotelGuestsNr; i++) {
             guests.add(guestService.generateRandomGuest(startDate, endDate));
         }
-//        System.out.println(guests);
-
-//        System.out.println(guestService.getGuestsForDay(guests,LocalDate.of(2022, Month.AUGUST, 8)));
 
         Map<MealType , List<LocalDateTime>> portions = new HashMap<>();
         for(int i=0; i<MealType.values().length; i++){
@@ -53,57 +48,61 @@ public class EHotelBuffetApplication {
         }
         Buffet buffet = new Buffet(portions);
 
-        System.out.println(buffet);
+        System.out.println("Initial: " + buffet);
 
-//        for(int i=0 ; i<MealType.values().length; i++){
-//            buffetService.refill(buffet,MealType.values()[i],1,LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0));
-//        }
-//
-        int cycle = 0;
-        guestsForTheDay = guestService.getGuestsForDay(guests, LocalDate.of(2022, Month.AUGUST, 8));
-        List<List<Set<Guest>>> smallerLists = Lists.partition(List.of(guestsForTheDay), 10);
+        int cycle = 8;
+        Set<Guest> guestsForTheDay = guestService.getGuestsForDay(guests, LocalDate.of(2022, Month.AUGUST, 8));
 
-        Map<Integer, List<Guest>> guestsPerCycle = new HashMap<>();
-//        for (int i = 0; i < 8; i++) {
-//            int
-//        }
+        Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay,cycle);
 
-        System.out.println(guestsForTheDay);
-        System.out.println(guestsForTheDay.size());
+        System.out.println("Number of guests today: " + guestsForTheDay.size());
 
-        for (Guest guest : guestsForTheDay){
-            buffetService.consumeFreshest(buffet, guest, LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0));
+        LocalDateTime currentTime = LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0);
+
+        for(int i = 0 ; i<cycle ; i++) {
+            for (Guest guest : guestsPerCycle.get(i)){
+                buffetService.consumeFreshest(buffet, guest, currentTime);
+            }
+            System.out.println("After cycle " + i + " : " + buffet);
+            for(int j=0 ; j<MealType.values().length; j++){
+                buffetService.refill(buffet,MealType.values()[j],2,currentTime);
+            }
+            System.out.println("After refill " + i + " : " + buffet);
+            currentTime = currentTime.plusMinutes(30);
         }
 
-        for(int i=0 ; i<MealType.values().length; i++){
-            buffetService.refill(buffet,MealType.values()[i],2,LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0));
-        }
-
-        while (cycle < 8){
-
-        }
         // Run breakfast buffet
 
     }
 
-//    private static Map<Integer, List<String>> groupGuestsIntoCycles(Set<Guest> guests, int numberOfCycles) {
-//        int guestsPerCycle = guests.size() / numberOfCycles;
-//
-//        Map<Integer, List<String>> cycles = new HashMap<>();
-//
-//        for (int i = 0; i < guests.size(); i++) {
-//            int cycleNumber = i / guestsPerCycle;
-//            cycles.computeIfAbsent(cycleNumber, k -> new ArrayList<>()).add(guests);
-//        }
-//
-//        // Handle remaining guests if the number is not evenly divisible
-//        int remainingGuests = guests.size() % numberOfCycles;
-//        int lastCycleNumber = numberOfCycles - 1;
-//
-//        for (int i = 0; i < remainingGuests; i++) {
-//            cycles.get(lastCycleNumber).add(guests.get(guests.size() - remainingGuests + i));
-//        }
-//
-//        return cycles;
-//    }
+    private static Map<Integer, List<Guest>> groupGuestsIntoCycles(Set<Guest> guests, int numberOfCycles) {
+        List<Guest> guestList = new ArrayList<>(guests); // Convert set to list
+        int totalGuests = guestList.size();
+
+        int guestsPerCycle = totalGuests / numberOfCycles;
+        int remainingGuests = totalGuests % numberOfCycles;
+
+        Map<Integer, List<Guest>> cycles = new HashMap<>();
+
+        int currentIndex = 0;
+
+        for (int cycleNumber = 0; cycleNumber < numberOfCycles; cycleNumber++) {
+            int guestsInCycle = guestsPerCycle;
+            if (cycleNumber < remainingGuests) {
+                guestsInCycle++;
+            }
+
+            List<Guest> cycleGuests = new ArrayList<>();
+            for (int i = 0; i < guestsInCycle; i++) {
+                cycleGuests.add(guestList.get(currentIndex));
+                currentIndex++;
+            }
+            cycles.put(cycleNumber, cycleGuests);
+        }
+
+        return cycles;
+    }
+
+
+
 }
