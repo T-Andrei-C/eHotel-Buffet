@@ -47,7 +47,7 @@ public class BuffetServiceImpl implements BuffetService {
             Duration maximumDuration = Duration.parse("PT1H");
             if (duration.equals(maximumDuration) && currentMeal.getDurability() == MealDurability.SHORT){
                 mealsCopy.add(meals.get(i));
-                System.out.println(meals.get(i) + " " + currentMeal);
+                System.out.println(meals.get(i) + " " + currentMeal + " " + currentMeal.getDurability());
                 totalCost += currentMeal.getCost();
             }
             for (int j = 0; j < mealsCopy.size(); j++) {
