@@ -5,7 +5,6 @@ import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.guest.GuestServiceImpl;
-import com.google.common.collect.Lists;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,6 +45,7 @@ public class EHotelBuffetApplication {
         }
         Buffet buffet = new Buffet(portions);
 
+        System.out.println("----------------------------------------------------------");
         System.out.println("Initial: " + buffet);
 
         int cycle = 8;
@@ -54,6 +54,7 @@ public class EHotelBuffetApplication {
         Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay, cycle);
 
         System.out.println("Number of guests today: " + guestsForTheDay.size());
+        System.out.println("----------------------------------------------------------");
 
         LocalDateTime currentTime = LocalDateTime.of(2022, Month.AUGUST, 8, 6, 0, 0);
 
@@ -74,6 +75,7 @@ public class EHotelBuffetApplication {
                 } else {
                     for (int k = 0; k < buffet.portions().get(MealType.values()[j]).size(); k++) {
                         if (MealType.values()[j].getDurability() == MealDurability.SHORT || MealType.values()[j].getDurability() == MealDurability.MEDIUM) {
+                            System.out.println(buffet.portions().get(MealType.values()[j]) + " " + MealType.values()[j] + " " + MealType.values()[j].getDurability());
                             buffet.portions().get(MealType.values()[j]).clear();
                             totalWasteCost += MealType.values()[j].getCost();
                         }
@@ -82,7 +84,9 @@ public class EHotelBuffetApplication {
             }
             if (i < 7){
                 System.out.println("After refill " + (i + 1) + " : " + buffet);
+                System.out.println("----------------------------------------------------------");
             } else {
+                System.out.println("----------------------------------------------------------");
                 System.out.println("Remaining meals: " + buffet);
             }
 
