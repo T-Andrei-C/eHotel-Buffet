@@ -34,16 +34,13 @@ public class GuestServiceImpl implements GuestService {
         int seasonLength = (int) ChronoUnit.DAYS.between(seasonStart, seasonEnd);
         int maxPeriod = Math.min(seasonLength, 7);
         int actualStay = rand.nextInt(maxPeriod) + 1;
-        int firstDay;
-        if(maxPeriod == actualStay) {
-            firstDay = seasonStart.getDayOfMonth();
-        } else {
-            firstDay = rand.nextInt(seasonLength - actualStay) + 1;
-        }
-        int lastDay = firstDay + actualStay;
 
-        LocalDate checkIn = seasonStart.plusDays(firstDay);
-        LocalDate checkOut = seasonStart.plusDays(lastDay);
+        int seasonDaysDifference = (int) ((seasonEnd.toEpochDay() - seasonStart.toEpochDay()) - actualStay);
+        int firstDayPositionInSequence = rand.nextInt(-1, seasonDaysDifference) + 1;
+        int lastDayPositionInSequence = firstDayPositionInSequence + actualStay;
+
+        LocalDate checkIn = seasonStart.plusDays(firstDayPositionInSequence);
+        LocalDate checkOut = seasonStart.plusDays(lastDayPositionInSequence);
 
         return new Guest(guestName, guestType, checkIn, checkOut);
     }
