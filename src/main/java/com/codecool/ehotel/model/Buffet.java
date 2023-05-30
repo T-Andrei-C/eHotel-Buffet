@@ -8,8 +8,4 @@ import java.util.Map;
 
 public record Buffet (Map<MealType, List<LocalDateTime>> portions) {
 
-    //The original parameter types will be converted and available as a Hashmap
-//    public Buffet() {
-//        this(new HashMap<>());
-//    }
 }

@@ -1,6 +1,8 @@
 package com.codecool.ehotel.service.buffet;
 
+import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.Guest;
+import com.codecool.ehotel.model.MealType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,4 +19,5 @@ public class BreakfastManager {
     public void serve(List<Set<Guest>> guestGroupOfCycles, LocalDateTime dateAndTime) {
 
     }
+
 }

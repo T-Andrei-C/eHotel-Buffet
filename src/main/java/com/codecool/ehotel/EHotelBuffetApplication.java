@@ -26,18 +26,30 @@ public class EHotelBuffetApplication {
         // Generate guests for the season
 
         final int hotelGuestsNr = 30;
-        LocalDate startDate = LocalDate.of(2023, Month.SEPTEMBER, 24);
-        LocalDate endDate = LocalDate.of(2023, Month.DECEMBER, 13);
+        LocalDate startDate = LocalDate.of(2022, Month.JULY, 20);
+        LocalDate endDate = LocalDate.of(2022, Month.AUGUST, 25);
 
         List<Guest> guests = new ArrayList<>();
         for(int i = 0; i < hotelGuestsNr; i++) {
             guests.add(guestService.generateRandomGuest(startDate, endDate));
         }
+        System.out.println(guests);
+
+        System.out.println(guestService.getGuestsForDay(guests,LocalDate.of(2022, Month.AUGUST, 8)));
+
+        Map<MealType , List<LocalDateTime>> portions = new HashMap<>();
+        for(int i=0; i<MealType.values().length; i++){
+            List<LocalDateTime> times = new ArrayList<>();
+            for(int j=0 ; j<2; j++){
+                times.add(LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0));
+            }
+            portions.put(MealType.values()[i], times);
+        }
+        Buffet buffet = new Buffet(portions);
+        System.out.println(buffet);
 
 
         // Run breakfast buffet
 
-//        Map<MealType, List<LocalDateTime>> actualPortions = new HashMap<>();
-//        Buffet myBuffet = new Buffet(actualPortions);
     }
 }

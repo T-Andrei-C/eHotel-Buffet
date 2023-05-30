@@ -21,9 +21,6 @@ public class GuestServiceImpl implements GuestService {
             "Verne", "Hunting", "Boston", "Sparrow", "Turner",
             "Greene", "Hamilton", "Tucker" };
 
-//    private final String[] guestNames = {
-//
-//    }
 
     @Override
     public Guest generateRandomGuest(LocalDate seasonStart, LocalDate seasonEnd) {
