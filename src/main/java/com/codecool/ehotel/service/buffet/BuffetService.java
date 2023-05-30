@@ -13,5 +13,5 @@ public interface BuffetService {
     LocalDate date();
     public Boolean consumeFreshest(Buffet buffet, Guest guest, LocalDateTime currentTime);
     public void refill(Buffet buffet, MealType meal, int amount, LocalDateTime currentTime);
-    public int collectWaste();
+    public int collectWaste(List<LocalDateTime> meals, LocalDateTime currentTime, MealType meal);
 }
