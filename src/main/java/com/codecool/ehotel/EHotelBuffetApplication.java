@@ -2,6 +2,8 @@ package com.codecool.ehotel;
 
 import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.MealType;
+import com.codecool.ehotel.service.buffet.BuffetService;
+import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.guest.GuestServiceImpl;
 import com.codecool.ehotel.model.Guest;
@@ -22,6 +24,7 @@ public class EHotelBuffetApplication {
         // Initialize services
 
         GuestService guestService = new GuestServiceImpl();
+        BuffetService buffetService = new BuffetServiceImpl();
 
         // Generate guests for the season
 
@@ -48,6 +51,10 @@ public class EHotelBuffetApplication {
         Buffet buffet = new Buffet(portions);
         System.out.println(buffet);
 
+        for(int i=0 ; i<buffet.portions().size(); i++){
+           // buffetService.refill(buffet,buffet.portions().get(i),1,LocalDateTime.of(2022, Month.AUGUST, 8,6,0,0));
+            System.out.println(buffet.portions().containsKey());
+        }
 
         // Run breakfast buffet
 

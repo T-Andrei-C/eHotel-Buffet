@@ -4,12 +4,13 @@ import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.MealType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 public interface BuffetService {
     LocalDate date();
     public Boolean consumeFreshest();
-    public void refill(Buffet buffet, MealType meal, int amount);
+    public void refill(Buffet buffet, MealType meal, int amount, LocalDateTime currentTime);
     public int collectWaste();
 }
