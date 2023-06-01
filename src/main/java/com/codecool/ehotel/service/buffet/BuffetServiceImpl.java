@@ -6,7 +6,6 @@ import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +13,6 @@ import java.util.Random;
 
 
 public class BuffetServiceImpl implements BuffetService {
-    @Override
-    public LocalDate date() {
-        return null;
-    }
 
     @Override
     public Boolean consumeFreshest(Buffet buffet, Guest guest, LocalDateTime currentTime) {
@@ -51,8 +46,8 @@ public class BuffetServiceImpl implements BuffetService {
                 System.out.println(meals.get(i) + " " + currentMeal + " " + currentMeal.getDurability());
                 totalCost += currentMeal.getCost();
             }
-            for (int j = 0; j < mealsCopy.size(); j++) {
-                meals.remove(mealsCopy.get(j));
+            for (LocalDateTime localDateTime : mealsCopy) {
+                meals.remove(localDateTime);
             }
         }
 

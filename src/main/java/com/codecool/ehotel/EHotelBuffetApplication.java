@@ -16,7 +16,7 @@ public class EHotelBuffetApplication {
         BuffetService buffetService = new BuffetServiceImpl();
         Logger consoleLogger = new ConsoleLogger();
         ScannerImpl scanner = new ScannerImpl();
-        BreakfastManager breakfastManager = new BreakfastManager(buffetService, guestService, consoleLogger);
+        BreakfastManager breakfastManager = new BreakfastManager(buffetService, consoleLogger);
         EHotelBuffetUi eHotelBuffetUi = new EHotelBuffetUi(consoleLogger, scanner, guestService, breakfastManager);
         eHotelBuffetUi.run();
     }

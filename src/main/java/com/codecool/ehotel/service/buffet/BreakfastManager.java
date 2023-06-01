@@ -4,7 +4,6 @@ import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
-import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.logger.Logger;
 
 import java.time.LocalDate;
@@ -13,12 +12,10 @@ import java.util.*;
 
 public class BreakfastManager {
     private final BuffetService buffetService;
-    private GuestService  guestService;
-    private Logger logger;
+    private final Logger logger;
 
-    public BreakfastManager(BuffetService buffetService, GuestService guestService, Logger logger) {
+    public BreakfastManager(BuffetService buffetService, Logger logger) {
         this.buffetService = buffetService;
-        this.guestService = guestService;
         this.logger = logger;
     }
 
