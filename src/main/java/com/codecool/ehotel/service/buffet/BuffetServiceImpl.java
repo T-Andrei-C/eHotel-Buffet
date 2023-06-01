@@ -25,6 +25,7 @@ public class BuffetServiceImpl implements BuffetService {
         MealType chosenMeal = guest.guestType().getMealPreferences()
                 .get(random.nextInt(0, guest.guestType().getMealPreferences().size()));
         if (!buffet.portions().get(chosenMeal).isEmpty()){
+            System.out.println(guest.name() + " picks and eats " + chosenMeal.name());
             buffet.portions().get(chosenMeal).remove(buffet.portions().get(chosenMeal).size() - 1);
             return true;
         }

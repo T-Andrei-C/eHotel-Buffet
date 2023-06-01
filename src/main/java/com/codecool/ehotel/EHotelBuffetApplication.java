@@ -29,6 +29,11 @@ public class EHotelBuffetApplication {
         final int hotelGuestsNr = 1000;
         LocalDate startDate = LocalDate.of(2022, Month.JULY, 20);
         LocalDate endDate = LocalDate.of(2022, Month.AUGUST, 25);
+        LocalDate chosenDate = LocalDate.of(2022, Month.AUGUST, 8);
+
+        System.out.println("----------------------------------------------------------");
+        System.out.println("Between " + startDate + " and " + endDate + ", a total of " + hotelGuestsNr + " guests was expected.");
+        System.out.println("On " + chosenDate + " we simulated a breakfast buffet:");
 
         List<Guest> guests = new ArrayList<>();
         for (int i = 0; i < hotelGuestsNr; i++) {
@@ -46,14 +51,14 @@ public class EHotelBuffetApplication {
         Buffet buffet = new Buffet(portions);
 
         System.out.println("----------------------------------------------------------");
-        System.out.println("Initial: " + buffet);
+        System.out.println("Initial spread: " + buffet);
 
         int cycle = 8;
         Set<Guest> guestsForTheDay = guestService.getGuestsForDay(guests, LocalDate.of(2022, Month.AUGUST, 8));
 
         Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay, cycle);
 
-        System.out.println("Number of guests today: " + guestsForTheDay.size());
+        System.out.println("Number of guests on that day: " + guestsForTheDay.size());
         System.out.println("----------------------------------------------------------");
 
         LocalDateTime currentTime = LocalDateTime.of(2022, Month.AUGUST, 8, 6, 0, 0);
@@ -68,9 +73,10 @@ public class EHotelBuffetApplication {
                 }
             }
             System.out.println("After cycle " + (i + 1) + " : " + buffet);
+            System.out.println("Discarded meals: ");
             for (int j = 0; j < MealType.values().length; j++) {
                 if (i < 7) {
-                    buffetService.refill(buffet, MealType.values()[j], 2, currentTime);
+                    buffetService.refill(buffet, MealType.values()[j], 1, currentTime);
                     totalWasteCost += buffetService.collectWaste(buffet.portions().get(MealType.values()[j]), currentTime, MealType.values()[j]);
                 } else {
                     for (int k = 0; k < buffet.portions().get(MealType.values()[j]).size(); k++) {
