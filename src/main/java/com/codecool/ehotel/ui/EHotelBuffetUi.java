@@ -15,10 +15,10 @@ import java.util.*;
 
 public class EHotelBuffetUi {
 
-    private Logger logger;
-    private ScannerImpl scanner;
-    private GuestService guestService;
-    private BreakfastManager breakfastManager;
+    private final Logger logger;
+    private final ScannerImpl scanner;
+    private final GuestService guestService;
+    private final BreakfastManager breakfastManager;
 
     public EHotelBuffetUi(Logger logger, ScannerImpl scanner, GuestService guestService,
                           BreakfastManager breakfastManager) {
@@ -101,10 +101,10 @@ public class EHotelBuffetUi {
                 Period period = Period.between(startDate, dateAnswer);
                 int months = (int) period.toTotalMonths();
                 int days = period.getDays();
-                if(months == 0 && days >= 0 || months == 1 && days <= 0) {
+                if((months == 0 && days >= 0 || months == 1 && days <= 0) && (days >= 3)) {
                     return dateAnswer;
                 } else {
-                    logger.logError("Pick an interval within 1 month");
+                    logger.logError("Pick an interval within 1 month and over 3 days");
                 }
             } catch (Exception e) {
                 logger.logError("Pick a valid date");
