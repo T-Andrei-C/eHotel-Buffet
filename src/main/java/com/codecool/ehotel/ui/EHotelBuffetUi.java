@@ -35,12 +35,15 @@ public class EHotelBuffetUi {
         LocalDate endDate = getEndDate(startDate);
         LocalDate chosenDate = getChosenDate(startDate, endDate);
         List<Guest> guests = generateGuestsForSeason(startDate, endDate, chosenDate);
+        Set<Guest> guestsForTheDay = guestService.getGuestsForDay(guests, chosenDate);
 
-        logger.logInfo(guests.toString());
-        Buffet buffet = new Buffet(generatePortions(chosenDate));
+        logger.logInfo("Number of guests on that day: " + guestsForTheDay.size());
+        logger.logInfo("----------------------------------------------------------");
+
+        Buffet buffet = new Buffet(generatePortions(chosenDate,guestsForTheDay.size()));
         logger.logInfo("----------------------------------------------------------");
         logger.logInfo("Initial spread: " + buffet);
-        breakfastManager.serve(guests, buffet, chosenDate);
+        breakfastManager.serve(guestsForTheDay, buffet, chosenDate);
     }
 
     private List<Guest> generateGuestsForSeason(LocalDate startDate, LocalDate endDate, LocalDate chosenDate) {
@@ -58,12 +61,13 @@ public class EHotelBuffetUi {
         return guests;
     }
 
-    private Map<MealType, List<LocalDateTime>> generatePortions(LocalDate chosenDate) {
+    private Map<MealType, List<LocalDateTime>> generatePortions(LocalDate chosenDate, int numberOfPersonForTheDay) {
+        int initialNumberOfPortions = numberOfPersonForTheDay<40 ? 1 : numberOfPersonForTheDay/40;
         LocalDateTime startDateTime = LocalDateTime.of(chosenDate.getYear(), chosenDate.getMonth(), chosenDate.getDayOfMonth(), 6, 0, 0);
         Map<MealType, List<LocalDateTime>> portions = new HashMap<>();
         for (int i = 0; i < MealType.values().length; i++) {
             List<LocalDateTime> times = new ArrayList<>();
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < initialNumberOfPortions; j++) {
                 times.add(startDateTime);
             }
             portions.put(MealType.values()[i], times);
