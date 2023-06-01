@@ -6,7 +6,6 @@ import com.codecool.ehotel.model.MealType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 public interface BuffetService {

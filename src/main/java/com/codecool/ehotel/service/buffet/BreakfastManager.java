@@ -22,18 +22,15 @@ public class BreakfastManager {
         this.logger = logger;
     }
 
-    public void serve(List<Guest> guests, Buffet buffet, LocalDate chosenDate) {
+    public void serve(Set<Guest> guestsForTheDay, Buffet buffet, LocalDate chosenDate) {
         List<Guest> happyGuests = new ArrayList<>();
         List<Guest> unhappyGuests = new ArrayList<>();
         LocalDateTime startDateTime = LocalDateTime.of(chosenDate.getYear(), chosenDate.getMonth(), chosenDate.getDayOfMonth(), 6, 0, 0);
         int totalWasteCost = 0;
         int cycle = 8;
-        Set<Guest> guestsForTheDay = guestService.getGuestsForDay(guests, chosenDate);
+        int amountToRefill = guestsForTheDay.size() < 80 ? 1 : Math.round((float) guestsForTheDay.size() /80);
 
         Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay, cycle);
-
-        logger.logInfo("Number of guests on that day: " + guestsForTheDay.size());
-        logger.logInfo("----------------------------------------------------------");
 
         LocalDateTime currentTime = startDateTime;
 
@@ -50,7 +47,7 @@ public class BreakfastManager {
             logger.logInfo("Discarded meals: ");
             for (int j = 0; j < MealType.values().length; j++) {
                 if (i < 7) {
-                    buffetService.refill(buffet, MealType.values()[j], 1, currentTime);
+                    buffetService.refill(buffet, MealType.values()[j], amountToRefill, currentTime);
                     totalWasteCost += buffetService.collectWaste(buffet.portions().get(MealType.values()[j]), currentTime, MealType.values()[j]);
                 } else {
                     for (int k = 0; k < buffet.portions().get(MealType.values()[j]).size(); k++) {

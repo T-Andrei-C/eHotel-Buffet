@@ -33,7 +33,7 @@ public class GuestServiceImpl implements GuestService {
         int actualStay = rand.nextInt(maxPeriod) + 1;
 
         int seasonDaysDifference = (int) ((seasonEnd.toEpochDay() - seasonStart.toEpochDay()) - actualStay);
-        int firstDayPositionInSequence = rand.nextInt(-1, seasonDaysDifference) + 1;
+        int firstDayPositionInSequence = rand.nextInt(seasonDaysDifference + 1);
         int lastDayPositionInSequence = firstDayPositionInSequence + actualStay;
 
         LocalDate checkIn = seasonStart.plusDays(firstDayPositionInSequence);
@@ -44,9 +44,11 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date) {
+        System.out.println(date + "^^^^^^");
         Set<Guest> guestsInInterval = new HashSet<>();
         for (Guest guest : guests) {
-            if(guest.checkIn().isBefore(date) && guest.checkOut().isAfter(date)){
+            if((guest.checkIn().isBefore(date) || guest.checkIn().equals(date)) &&
+                    (guest.checkOut().isAfter(date) || guest.checkOut().equals(date))){
                 guestsInInterval.add(guest);
             }
         }
