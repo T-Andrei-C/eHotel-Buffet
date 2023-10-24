@@ -7,6 +7,7 @@ import com.codecool.ehotel.service.buffet.BreakfastManager;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.logger.Logger;
 import com.codecool.ehotel.service.scanner.ScannerImpl;
+import com.codecool.ehotel.service.scanner.ScannerInterface;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,11 +17,11 @@ import java.util.*;
 public class EHotelBuffetUi {
 
     private final Logger logger;
-    private final ScannerImpl scanner;
+    private final ScannerInterface scanner;
     private final GuestService guestService;
     private final BreakfastManager breakfastManager;
 
-    public EHotelBuffetUi(Logger logger, ScannerImpl scanner, GuestService guestService,
+    public EHotelBuffetUi(Logger logger, ScannerInterface scanner, GuestService guestService,
                           BreakfastManager breakfastManager) {
         this.logger = logger;
         this.scanner = scanner;

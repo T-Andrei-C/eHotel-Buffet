@@ -4,40 +4,24 @@ import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.GuestType;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GuestServiceImpl implements GuestService {
-    private final String[] firstNames = {
-            "Tomas", "Samuel", "George", "Noelle", "Lily",
-            "Rosa", "Hugh", "Jack", "Will", "Rachel", "Nadia",
-            "Chloe"
-    };
-    private final String[] lastNames = {
-            "Rutherford", "Hammond", "Nelson", "Dobson",
-            "Verne", "Hunting", "Boston", "Sparrow", "Turner",
-            "Greene", "Hamilton", "Tucker" };
 
+    private final GuestCreator guestCreator;
+
+    public GuestServiceImpl(GuestCreator guestCreator) {
+        this.guestCreator = guestCreator;
+    }
 
     @Override
     public Guest generateRandomGuest(LocalDate seasonStart, LocalDate seasonEnd) {
-        Random rand = new Random();
-        String guestName = firstNames[rand.nextInt(firstNames.length)] + " " + lastNames[rand.nextInt(lastNames.length)];
-        GuestType guestType = GuestType.values()[rand.nextInt(GuestType.values().length)];
-
-        int seasonLength = (int) ChronoUnit.DAYS.between(seasonStart, seasonEnd);
-        int maxPeriod = Math.min(seasonLength, 7);
-        int actualStay = rand.nextInt(maxPeriod) + 1;
-
-        int seasonDaysDifference = (int) ((seasonEnd.toEpochDay() - seasonStart.toEpochDay()) - actualStay);
-        int firstDayPositionInSequence = rand.nextInt(seasonDaysDifference + 1);
-        int lastDayPositionInSequence = firstDayPositionInSequence + actualStay;
-
-        LocalDate checkIn = seasonStart.plusDays(firstDayPositionInSequence);
-        LocalDate checkOut = seasonStart.plusDays(lastDayPositionInSequence);
+        String guestName = guestCreator.getGuestName();
+        GuestType guestType = guestCreator.getGuestType();
+        LocalDate checkIn = guestCreator.getCheckIn(seasonStart, seasonEnd);
+        LocalDate checkOut = guestCreator.getCheckOut(seasonStart);
 
         return new Guest(guestName, guestType, checkIn, checkOut);
     }
@@ -45,13 +29,9 @@ public class GuestServiceImpl implements GuestService {
     @Override
     public Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date) {
         System.out.println(date + "^^^^^^");
-        Set<Guest> guestsInInterval = new HashSet<>();
-        for (Guest guest : guests) {
-            if((guest.checkIn().isBefore(date) || guest.checkIn().equals(date)) &&
-                    (guest.checkOut().isAfter(date) || guest.checkOut().equals(date))){
-                guestsInInterval.add(guest);
-            }
-        }
-        return guestsInInterval;
+        return guests.stream()
+                .filter(guest -> (guest.checkIn().isBefore(date) || guest.checkIn().equals(date)) &&
+                                (guest.checkOut().isAfter(date) || guest.checkOut().equals(date)))
+                .collect(Collectors.toSet());
     }
 }
