@@ -6,10 +6,9 @@ import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class BuffetServiceImpl implements BuffetService {
@@ -52,5 +51,19 @@ public class BuffetServiceImpl implements BuffetService {
         }
 
         return totalCost;
+    }
+
+    public Map<MealType, List<LocalDateTime>> generatePortions(LocalDate chosenDate, int numberOfPersonForTheDay) {
+        int initialNumberOfPortions = numberOfPersonForTheDay < 40 ? 1 : numberOfPersonForTheDay / 40;
+        LocalDateTime startDateTime = LocalDateTime.of(chosenDate.getYear(), chosenDate.getMonth(), chosenDate.getDayOfMonth(), 6, 0, 0);
+        Map<MealType, List<LocalDateTime>> portions = new HashMap<>();
+        for (int i = 0; i < MealType.values().length; i++) {
+            List<LocalDateTime> times = new ArrayList<>();
+            for (int j = 0; j < initialNumberOfPortions; j++) {
+                times.add(startDateTime);
+            }
+            portions.put(MealType.values()[i], times);
+        }
+        return portions;
     }
 }

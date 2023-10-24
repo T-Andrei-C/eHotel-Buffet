@@ -19,13 +19,14 @@ public class BreakfastManager {
         this.logger = logger;
     }
 
-    public void serve(Set<Guest> guestsForTheDay, Buffet buffet, LocalDate chosenDate) {
+    public void serve(Set<Guest> guestsForTheDay, LocalDate chosenDate) {
         List<Guest> happyGuests = new ArrayList<>();
         List<Guest> unhappyGuests = new ArrayList<>();
         LocalDateTime startDateTime = LocalDateTime.of(chosenDate.getYear(), chosenDate.getMonth(), chosenDate.getDayOfMonth(), 6, 0, 0);
+        Buffet buffet = new Buffet(buffetService.generatePortions(chosenDate,guestsForTheDay.size()));
         int totalWasteCost = 0;
         int cycle = 8;
-        int amountToRefill = guestsForTheDay.size() < 80 ? 1 : Math.round((float) guestsForTheDay.size() /80);
+        int amountToRefill = guestsForTheDay.size() < 80 ? 1 : Math.round((float) guestsForTheDay.size() / 80);
 
         Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay, cycle);
 
