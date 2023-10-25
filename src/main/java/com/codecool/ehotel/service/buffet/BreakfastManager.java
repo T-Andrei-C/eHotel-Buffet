@@ -4,6 +4,7 @@ import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
+import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.logger.Logger;
 
 import java.time.LocalDate;
@@ -12,10 +13,13 @@ import java.util.*;
 
 public class BreakfastManager {
     private final BuffetService buffetService;
+
+    private final GuestService guestService;
     private final Logger logger;
 
-    public BreakfastManager(BuffetService buffetService, Logger logger) {
+    public BreakfastManager(BuffetService buffetService, GuestService guestService, Logger logger) {
         this.buffetService = buffetService;
+        this.guestService = guestService;
         this.logger = logger;
     }
 
@@ -23,12 +27,14 @@ public class BreakfastManager {
         List<Guest> happyGuests = new ArrayList<>();
         List<Guest> unhappyGuests = new ArrayList<>();
         LocalDateTime startDateTime = LocalDateTime.of(chosenDate.getYear(), chosenDate.getMonth(), chosenDate.getDayOfMonth(), 6, 0, 0);
+
         Buffet buffet = new Buffet(buffetService.generatePortions(chosenDate,guestsForTheDay.size()));
+
         int totalWasteCost = 0;
         int cycle = 8;
         int amountToRefill = guestsForTheDay.size() < 80 ? 1 : Math.round((float) guestsForTheDay.size() / 80);
 
-        Map<Integer, List<Guest>> guestsPerCycle = groupGuestsIntoCycles(guestsForTheDay, cycle);
+        Map<Integer, List<Guest>> guestsPerCycle = guestService.groupGuestsIntoCycles(guestsForTheDay, cycle);
 
         LocalDateTime currentTime = startDateTime;
 
@@ -73,33 +79,4 @@ public class BreakfastManager {
         logger.logInfo("Number of unhappy guests: " + unhappyGuests.size());
         logger.logInfo("Total money loss today :( " + totalWasteCost);
     }
-
-    private static Map<Integer, List<Guest>> groupGuestsIntoCycles(Set<Guest> guests, int numberOfCycles) {
-        List<Guest> guestList = new ArrayList<>(guests); // Convert set to list
-        int totalGuests = guestList.size();
-
-        int guestsPerCycle = totalGuests / numberOfCycles;
-        int remainingGuests = totalGuests % numberOfCycles;
-
-        Map<Integer, List<Guest>> cycles = new HashMap<>();
-
-        int currentIndex = 0;
-
-        for (int cycleNumber = 0; cycleNumber < numberOfCycles; cycleNumber++) {
-            int guestsInCycle = guestsPerCycle;
-            if (cycleNumber < remainingGuests) {
-                guestsInCycle++;
-            }
-
-            List<Guest> cycleGuests = new ArrayList<>();
-            for (int i = 0; i < guestsInCycle; i++) {
-                cycleGuests.add(guestList.get(currentIndex));
-                currentIndex++;
-            }
-            cycles.put(cycleNumber, cycleGuests);
-        }
-
-        return cycles;
-    }
-
 }

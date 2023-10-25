@@ -31,7 +31,7 @@ public class EHotelBuffetApplication {
         GuestService guestService = new GuestServiceImpl(guestCreator);
         BuffetService buffetService = new BuffetServiceImpl();
 
-        BreakfastManager breakfastManager = new BreakfastManager(buffetService, consoleLogger);
+        BreakfastManager breakfastManager = new BreakfastManager(buffetService, guestService, consoleLogger);
         EHotelBuffetUi eHotelBuffetUi = new EHotelBuffetUi(consoleLogger, seasonDates, guestService, breakfastManager);
 
         eHotelBuffetUi.run(hotelGuestNum);
