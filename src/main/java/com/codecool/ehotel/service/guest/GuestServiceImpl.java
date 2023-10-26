@@ -18,7 +18,6 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date) {
-        System.out.println(date + "^^^^^^");
         return guests.stream()
                 .filter(guest -> (guest.checkIn().isBefore(date) || guest.checkIn().equals(date)) &&
                         (guest.checkOut().isAfter(date) || guest.checkOut().equals(date)))
@@ -53,7 +52,6 @@ public class GuestServiceImpl implements GuestService {
             }
             cycles.put(cycleNumber, cycleGuests);
         }
-
         return cycles;
     }
 

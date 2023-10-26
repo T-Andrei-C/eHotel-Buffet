@@ -1,6 +1,6 @@
 package com.codecool.ehotel;
 
-import com.codecool.ehotel.service.buffet.BreakfastManager;
+import com.codecool.ehotel.service.buffet.BreakfastManagerImpl;
 import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 import com.codecool.ehotel.service.date.SeasonDates;
@@ -29,10 +29,10 @@ public class EHotelBuffetApplication {
         SeasonDates seasonDates = new SeasonDatesImpl(scanner, consoleLogger);
         GuestCreator guestCreator = new GuestCreatorImpl(rand);
         GuestService guestService = new GuestServiceImpl(guestCreator);
-        BuffetService buffetService = new BuffetServiceImpl();
+        BuffetService buffetService = new BuffetServiceImpl(rand);
 
-        BreakfastManager breakfastManager = new BreakfastManager(buffetService, guestService, consoleLogger);
-        EHotelBuffetUi eHotelBuffetUi = new EHotelBuffetUi(consoleLogger, seasonDates, guestService, breakfastManager);
+        BreakfastManagerImpl breakfastManagerImpl = new BreakfastManagerImpl(buffetService, guestService, consoleLogger);
+        EHotelBuffetUi eHotelBuffetUi = new EHotelBuffetUi(consoleLogger, seasonDates, guestService, breakfastManagerImpl);
 
         eHotelBuffetUi.run(hotelGuestNum);
     }

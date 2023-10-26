@@ -1,35 +1,27 @@
 package com.codecool.ehotel.ui;
 
-import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.Guest;
-import com.codecool.ehotel.model.MealType;
-import com.codecool.ehotel.service.buffet.BreakfastManager;
+import com.codecool.ehotel.service.buffet.BreakfastManagerImpl;
 import com.codecool.ehotel.service.date.SeasonDates;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.logger.Logger;
-import com.codecool.ehotel.service.scanner.ScannerImpl;
-import com.codecool.ehotel.service.scanner.ScannerInterface;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class EHotelBuffetUi {
 
     private final Logger logger;
     private final SeasonDates seasonDates;
     private final GuestService guestService;
-    private final BreakfastManager breakfastManager;
+    private final BreakfastManagerImpl breakfastManagerImpl;
 
     public EHotelBuffetUi(Logger logger, SeasonDates seasonDates, GuestService guestService,
-                          BreakfastManager breakfastManager) {
+                          BreakfastManagerImpl breakfastManagerImpl) {
         this.logger = logger;
         this.seasonDates = seasonDates;
         this.guestService = guestService;
-        this.breakfastManager = breakfastManager;
+        this.breakfastManagerImpl = breakfastManagerImpl;
     }
 
     public void run(int hotelGuestNum) {
@@ -53,7 +45,7 @@ public class EHotelBuffetUi {
 //        Buffet buffet = new Buffet(generatePortions(chosenDate,guestsForTheDay.size()));
         logger.logInfo("----------------------------------------------------------");
 //        logger.logInfo("Initial spread: " + buffet);
-        breakfastManager.serve(guestsForTheDay, chosenDate);
+        breakfastManagerImpl.serve(guestsForTheDay, chosenDate);
     }
 
     private void welcomeMessage() {
