@@ -8,7 +8,6 @@ import com.codecool.ehotel.model.MealType;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
 
@@ -25,7 +24,7 @@ public class BuffetServiceImpl implements BuffetService {
         MealType chosenMeal = guest.guestType().getMealPreferences()
                 .get(rand.nextInt(0, guest.guestType().getMealPreferences().size()));
 
-        if (!buffet.portions().get(chosenMeal).isEmpty()){
+        if (!buffet.portions().get(chosenMeal).isEmpty()) {
             System.out.println(guest.name() + " picks and eats " + chosenMeal.name());
 
             buffet.portions().get(chosenMeal).remove(buffet.portions().get(chosenMeal).size() - 1);
@@ -36,8 +35,20 @@ public class BuffetServiceImpl implements BuffetService {
 
     @Override
     public void refill(Buffet buffet, MealType meal, int amount, LocalDateTime currentTime) {
-        for (int i = 0; i < amount; i++) {
-            buffet.portions().get(meal).add(currentTime);
+        if (buffet.portions().get(meal).size() < amount + 1) {
+            if (meal.getDurability() == MealDurability.MEDIUM) {
+                for (int i = 0; i < amount - (Math.round((float) buffet.portions().get(meal).size() / 6)); i++) {
+                    buffet.portions().get(meal).add(currentTime);
+                }
+            } else if (meal.getDurability() == MealDurability.SHORT) {
+                for (int i = 0; i < amount - (Math.round((float) buffet.portions().get(meal).size() / 10)); i++) {
+                    buffet.portions().get(meal).add(currentTime);
+                }
+            } else {
+                for (int i = 0; i < amount; i++) {
+                    buffet.portions().get(meal).add(currentTime);
+                }
+            }
         }
     }
 
