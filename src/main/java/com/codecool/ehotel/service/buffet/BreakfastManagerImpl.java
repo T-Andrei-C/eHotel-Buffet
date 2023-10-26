@@ -38,6 +38,9 @@ public class BreakfastManagerImpl implements BreakfastManager {
 
         LocalDateTime currentTime = startDateTime;
 
+        logger.logInfo("Initial spread: " + buffet);
+        logger.logInfo("Cycle 1 starts!!!\n");
+
         for (int i = 0; i < cycle; i++) {
             addGuestsToHappyOrUnhappyList(guestsPerCycle, i, buffet, currentTime, happyGuests, unhappyGuests);
             currentTime = currentTime.plusMinutes(30);
@@ -50,7 +53,7 @@ public class BreakfastManagerImpl implements BreakfastManager {
             if (i < 7) {
                 logger.logInfo("After refill " + (i + 1) + " : " + buffet);
                 logger.logInfo("----------------------------------------------------------");
-                logger.logInfo("Cycle " + (i + 1) + " starts!!!\n");
+                logger.logInfo("Cycle " + (i + 2) + " starts!!!\n");
             } else {
                 logger.logInfo("----------------------------------------------------------");
                 logger.logInfo("Remaining meals: " + buffet);
@@ -87,6 +90,7 @@ public class BreakfastManagerImpl implements BreakfastManager {
             } else {
                 if (mealType.getDurability() == MealDurability.SHORT || mealType.getDurability() == MealDurability.MEDIUM) {
                     totalWasteCost += mealType.getCost() * buffet.portions().get(mealType).size();
+                    System.out.println(buffet.portions().get(mealType).size() + " " + mealType);
                     buffet.portions().get(mealType).clear();
                 }
             }

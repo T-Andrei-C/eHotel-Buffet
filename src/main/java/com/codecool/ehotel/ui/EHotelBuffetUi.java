@@ -42,9 +42,6 @@ public class EHotelBuffetUi {
         logger.logInfo("Number of guests on that day: " + guestsForTheDay.size());
         logger.logInfo("----------------------------------------------------------");
 
-//        Buffet buffet = new Buffet(generatePortions(chosenDate,guestsForTheDay.size()));
-        logger.logInfo("----------------------------------------------------------");
-//        logger.logInfo("Initial spread: " + buffet);
         breakfastManagerImpl.serve(guestsForTheDay, chosenDate);
     }
 
