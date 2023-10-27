@@ -73,6 +73,7 @@ public class BuffetServiceImpl implements BuffetService {
         return totalCost;
     }
 
+    @Override
     public Map<MealType, List<LocalDateTime>> generatePortions(LocalDate chosenDate, int numberOfPersonForTheDay) {
         int initialNumberOfPortions = numberOfPersonForTheDay < 40 ? 1 : numberOfPersonForTheDay / 40;
         LocalDateTime startDateTime = LocalDateTime.of(chosenDate.getYear(), chosenDate.getMonth(), chosenDate.getDayOfMonth(), 6, 0, 0);
